@@ -15,7 +15,7 @@ const todoList = () => {
         const today = new Date(formattedDate(dateToday)).getTime();
         const overdueList = all.filter((item) => {
             let givenDate = new Date(item.dueDate).getTime();
-            if (givenDate > today)
+            if (givenDate < today)
                 return true;
         });
         return overdueList;
@@ -41,7 +41,7 @@ const todoList = () => {
         const today = new Date(formattedDate(dateToday)).getTime();
         const dueLaterList = all.filter((item) => {
             let givenDate = new Date(item.dueDate).getTime();
-            if (givenDate < today)
+            if (givenDate > today)
                 return true;
         });
         return dueLaterList;
