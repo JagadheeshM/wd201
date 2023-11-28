@@ -52,9 +52,10 @@ const todoList = () => {
         // as per the format given above.
         let res = "";
         list.forEach((item) => {
-            res += `[${(item.completed) ? "X" : " "}] ${item.title} ${(new Date(item.dueDate).getTime() == new Date(formattedDate(new Date)).getTime()) ? "" : item.dueDate}\n`;
+            res += `[${(item.completed) ? "x" : " "}] ${item.title} ${(new Date(item.dueDate).getTime() == new Date(formattedDate(new Date)).getTime()) ? "" : item.dueDate}\n`;
+
         });
-        return res;
+        return res.substring(0, res.length - 1);
     }
 
     return {
