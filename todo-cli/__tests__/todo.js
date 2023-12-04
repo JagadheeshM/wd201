@@ -1,5 +1,25 @@
 /* eslint-disable */
-const todoList = require("../todo");
+
+const db = require("../models");
+
+describe("Todo List Test Suite", () => {
+  beforeAll(async () => {
+    await db.sequelize.sync({ force: true });
+  });
+
+  test("Should add new todo", async () => {
+    const totalCount = await db.Todo.count();
+    await db.Todo.addTask({
+      title: "Test todo",
+      dueDate: new Date(),
+      completed: true,
+    });
+    const newTotalCount = await db.Todo.count();
+    expect(newTotalCount).toBe(totalCount + 1);
+  });
+});
+
+/*const todoList = require("../todo");
 
 const { all, markAsComplete, add, overdue, dueToday, dueLater } = todoList();
 
@@ -58,3 +78,4 @@ describe("Todo list testsuite", () => {
     expect(dueLaterList.length).toBe(2);
   });
 });
+*/
