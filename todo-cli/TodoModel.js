@@ -6,7 +6,7 @@ class Todo extends Model {
     return await Todo.create(params);
   }
 
-  displayableSting() {
+  displayableString() {
     return `${this.completed ? "[x]" : "[ ]"}${this.id}.${this.title} - ${
       this.dueDate
     }`;
