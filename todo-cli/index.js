@@ -27,7 +27,7 @@ const countItems = async () => {
 const getAllTodo = async () => {
   try {
     const todos = await Todo.findAll();
-    const todoList = todos.map((todo) => todo.displayableSting()).join("\n");
+    const todoList = todos.map((todo) => todo.displayableString()).join("\n");
     console.log(todoList);
   } catch (error) {
     console.error(error);

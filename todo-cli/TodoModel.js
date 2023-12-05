@@ -7,8 +7,15 @@ class Todo extends Model {
   }
 
   displayableString() {
-    return `${this.completed ? "[x]" : "[ ]"}${this.id}.${this.title} - ${
-      this.dueDate
+    const formattedDate = (d) => {
+      return d.toISOString().split("T")[0];
+    };
+    let checkbox = this.completed ? "[x]" : "[ ]";
+    return `${this.id}. ${checkbox} ${this.title} ${
+      new Date(this.dueDate).getTime() ==
+      new Date(formattedDate(new Date())).getTime()
+        ? ""
+        : this.dueDate
     }`;
   }
 }
