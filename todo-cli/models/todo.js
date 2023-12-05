@@ -98,11 +98,11 @@ module.exports = (sequelize, DataTypes) => {
         return d.toISOString().split("T")[0];
       };
       let checkbox = this.completed ? "[x]" : "[ ]";
-      return `${this.id}. ${checkbox} ${this.title} ${
+      return `${this.id}. ${checkbox} ${this.title}${
         new Date(this.dueDate).getTime() ==
         new Date(formattedDate(new Date())).getTime()
           ? ""
-          : this.dueDate
+          : " " + this.dueDate
       }`;
     }
   }
