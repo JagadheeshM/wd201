@@ -57,11 +57,16 @@ app.delete("/todos/:id", async function (request, response) {
       where: {
         id: request.params.id,
       },
+    }).then((deletedRows) => {
+      if (deletedRows > 0) {
+        response.send(true);
+      } else {
+        response.send(false);
+      }
     });
-    response.send(true);
   } catch (error) {
     console.log(error);
-    response.send(false);
+    return response.status(422).json(error);
   }
   // FILL IN YOUR CODE HERE
 
