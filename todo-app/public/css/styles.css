@@ -1,6 +1,5 @@
 body {
-  background-color: rgb(235, 235, 235);
-  font-family: "Courier New", Courier, monospace;
+  background-color: rgb(255, 255, 255);
 }
 
 table,
@@ -8,4 +7,8 @@ tr,
 th,
 td {
   border: 2px solid black;
+}
+
+.Todo-Item:hover .trash-icon {
+  display: block;
 }
