@@ -17,7 +17,7 @@
         
     }
     %>
-    <h5 id="count-overdue">Overdue <span id="count-overdue"><%=count1%></span></h5>
+    <h5>Overdue</h5><span id="count-overdue"><%=count1%></span>
     <ul class="list-none">
         <%for(var i=0;i < allTodos.length ; i++ ){
             
@@ -39,7 +39,7 @@
             </li>
         <%}}%>
     </ul>
-    <h5 id="count-due-today">Due Today <span id="count-due-today"><%=count2%></span>  </h5>
+    <h5>Due Today</h5><span id="count-due-today"><%=count2%></span>
     <ul class="list-none">
         <%for(var i=0;i < allTodos.length ; i++ ){
             const date1 = new Date()
@@ -60,7 +60,7 @@
             </li>
         <%}}%>
     </ul>
-    <h5 id="count-due-later">Due Later <span id="count-due-later"><%=count3%></span> </h5>
+    <h5>Due Later</h5><span id="count-due-later"><%=count3%></span>
     <ul class="list-none">
         <%for(var i=0;i < allTodos.length ; i++ ){
             const date1 = new Date()
