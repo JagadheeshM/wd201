@@ -14,12 +14,23 @@ module.exports = (sequelize, DataTypes) => {
     static allTodos() {
       return this.findAll();
     }
-    static addTodo({ title, dueDate }) {
-      this.create({ title: title, dueDate: dueDate, completed: false });
+    static async addTodo({ title, dueDate }) {
+      return await this.create({
+        title: title,
+        dueDate: dueDate,
+        completed: false,
+      });
     }
 
-    markAsCompleted() {
-      return this.update({ completed: true });
+    static async remove(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
+    }
+    async setCompletionStatus(res) {
+      await this.update({ completed: !res });
     }
   }
   Todo.init(
