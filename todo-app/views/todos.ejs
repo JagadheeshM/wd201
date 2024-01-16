@@ -32,7 +32,7 @@
             const date2 = new Date(allTodos[i].dueDate)
             date1.setHours(0, 0, 0, 0);
             date2.setHours(0, 0, 0, 0);
-            if(date2 < date1 && !allTodos[i].completed){%>
+            if(date2 < date1){%>
             <li class="Todo-Item">
                 <div class="flex items-center w-fit my-2 px-2 py-1 hover:bg-purple-50 rounded">
                     <input type="checkbox" <%= allTodos[i].completed?"checked":"" %> onclick="updateTodo(<%=allTodos[i].id%>)" id="todo-<%= allTodos[i].id %>" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray">
@@ -56,7 +56,7 @@
             const date2 = new Date(allTodos[i].dueDate)
             date1.setHours(0, 0, 0, 0);
             date2.setHours(0, 0, 0, 0);
-            if(date2.getTime() == date1.getTime() && !allTodos[i].completed){%>
+            if(date2.getTime() == date1.getTime()){%>
             <li class="Todo-Item">
                 <div class="flex items-center w-fit my-2 px-2 py-1 hover:bg-purple-50 rounded">
                     <input type="checkbox" id="todo-<%= allTodos[i].id %>" <%= allTodos[i].completed?"checked":"" %> onclick="updateTodo(<%=allTodos[i].id%>)" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray">
@@ -80,7 +80,7 @@
             const date2 = new Date(allTodos[i].dueDate)
             date1.setHours(0, 0, 0, 0);
             date2.setHours(0, 0, 0, 0);
-            if(date2 > date1&& !allTodos[i].completed){%>
+            if(date2 > date1){%>
             <li class="Todo-Item">
                 <div class="flex items-center w-fit my-2 px-2 py-1 hover:bg-purple-50 rounded">
                     <input type="checkbox" id="todo-<%= allTodos[i].id %>" <%= allTodos[i].completed?"checked":"" %> onclick="updateTodo(<%=allTodos[i].id%>)" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray">
