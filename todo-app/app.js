@@ -12,6 +12,10 @@ app.use(cookieParser("ssh! some secret string"));
 app.use(csrf({ cookie: true }));
 app.set("view engine", "ejs");
 
+const flash = require("connect-flash");
+app.set("views", path.join(__dirname, "views"));
+app.use(flash());
+
 const passport = require("passport");
 const connectEnsureLogin = require("connect-ensure-login");
 const session = require("express-session");
@@ -41,7 +45,7 @@ passport.use(
         .then(async (user) => {
           const res = await bcrypt.compare(password, user.password);
           if (res) return done(null, user);
-          else return done("Invalid password");
+          else return done(null, false, { message: "Invalid password" });
         })
         .catch((err) => {
           return err;
@@ -77,10 +81,12 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     const allTodos = await Todo.allTodos(request.user.id);
+    const errorMsg = request.flash("error");
     if (request.accepts("html")) {
       response.render("todo", {
         allTodos,
         csrfToken: request.csrfToken(),
+        errorMsg,
       });
     } else {
       response.json(allTodos);
@@ -88,6 +94,10 @@ app.get(
   },
 );
 
+app.use(function (request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/login", (req, res) => {
@@ -99,7 +109,10 @@ app.get("/login", (req, res) => {
 
 app.post(
   "/session",
-  passport.authenticate("local", { failureRedirect: "/login" }),
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
   (req, res) => {
     res.redirect("/todos");
   },
@@ -147,21 +160,28 @@ app.post(
   "/todos",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
-    try {
-      const todo = await Todo.addTodo({
-        title: request.body.title,
-        dueDate: request.body.dueDate,
-        userId: request.user.id,
-      });
-      if (request.accepts("html")) {
-        return response.redirect("/todos");
-      } else {
-        // console.log("todo => ", todo.dataValues['completed']);
-        return response.json(todo);
+    console.log("title :", request.body.title);
+    if (request.body.title.trim() === "") {
+      console.log("title :", request.body.title);
+      request.flash("error", "Title cannot be empty");
+      response.redirect("/todos");
+    } else {
+      try {
+        const todo = await Todo.addTodo({
+          title: request.body.title,
+          dueDate: request.body.dueDate,
+          userId: request.user.id,
+        });
+        if (request.accepts("html")) {
+          return response.redirect("/todos");
+        } else {
+          // console.log("todo => ", todo.dataValues['completed']);
+          return response.json(todo);
+        }
+      } catch (error) {
+        console.log(error);
+        return response.status(422).json(error);
       }
-    } catch (error) {
-      console.log(error);
-      return response.status(422).json(error);
     }
   },
 );
