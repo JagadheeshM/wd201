@@ -9,23 +9,32 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Todo.belongsTo(models.User, {
+        foreignKey: "userId",
+      });
     }
 
-    static allTodos() {
-      return this.findAll();
+    static allTodos(userId) {
+      return this.findAll({
+        where: {
+          userId,
+        },
+      });
     }
-    static async addTodo({ title, dueDate }) {
+    static async addTodo({ title, dueDate, userId }) {
       return await this.create({
         title: title,
         dueDate: dueDate,
         completed: false,
+        userId: userId,
       });
     }
 
-    static async remove(id) {
+    static async remove(id, userId) {
       return this.destroy({
         where: {
           id,
+          userId,
         },
       });
     }
