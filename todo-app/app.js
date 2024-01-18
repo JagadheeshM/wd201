@@ -214,10 +214,17 @@ app.get("/signup", async (req, res) => {
 
 app.post("/users", async (req, res) => {
   const res1 = req.body.firstName.trim() === "";
+  const res2 = req.body.email.trim() === "";
+  const res3 = req.body.password.trim() === "";
+
   if (res1) {
-    console.log("firstname : ", req.body.firstName);
     req.flash("error", "First name cannot be empty");
-    console.log("Flash messages set:", req.flash("error"));
+    res.redirect("/signup");
+  } else if (res2) {
+    req.flash("error", "Email cannot be empty");
+    res.redirect("/signup");
+  } else if (res3) {
+    req.flash("error", "Password cannot be empty");
     res.redirect("/signup");
   } else {
     //hash the password
