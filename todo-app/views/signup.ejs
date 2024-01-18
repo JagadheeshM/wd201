@@ -13,7 +13,15 @@
             <%-  include('header.ejs') %>
             <h6 class="py-4">Signup as a new user</h6>
             <form action="/users" method="post">
+                <% if (flashMessages && flashMessages.length > 0) { %>
+                    <div class="flash-messages">
+                      <% flashMessages.forEach(message => { %>
+                        <p><%- message %></p>
+                      <% }); %>
+                    </div>
+                  <% } %>
                 <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                
                 <div class="py-2">
                     <label for="firstName">First Name:</label>
                     <input type="text" id="firstName" name="firstName" class="border border-gray-300 text-gray-900 rounded p-2 w-full">
@@ -32,6 +40,10 @@
                 </div>
                 <div class="py-2">
                     <button type="submit" class="bg-green-600 text-white px-5 py-1.5 font-medium mr-2 mb-2 rounded ">Signup</button>
+                </div>
+                <div class="py-2">
+                    
+                    <a href="/login" class="bg-green-600 text-white px-5 py-1.5 font-medium mr-2 mb-2 rounded ">Login</a>already user?
                 </div>
             </form>
         </div>

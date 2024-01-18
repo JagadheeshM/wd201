@@ -28,6 +28,8 @@ app.use(
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
     },
+    resave: true,
+    saveUninitialized: true,
   }),
 );
 
@@ -126,36 +128,36 @@ app.get("/signout", (req, res, next) => {
     res.redirect("/");
   });
 });
+/*
+// app.get(
+//   "/todos",
+//   connectEnsureLogin.ensureLoggedIn(),
+//   async function (request, response) {
+//     console.log("Processing list of all Todos ...");
+//     try {
+//       const todo = await Todo.findAll(request.user.id);
+//       return response.json(todo);
+//     } catch (error) {
+//       console.log(error);
+//       return response.status(422).json(error);
+//     }
+//   },
+// );
 
-app.get(
-  "/todos",
-  connectEnsureLogin.ensureLoggedIn(),
-  async function (request, response) {
-    console.log("Processing list of all Todos ...");
-    try {
-      const todo = await Todo.findAll(request.user.id);
-      return response.json(todo);
-    } catch (error) {
-      console.log(error);
-      return response.status(422).json(error);
-    }
-  },
-);
-
-app.get(
-  "/todos/:id",
-  connectEnsureLogin.ensureLoggedIn(),
-  async function (request, response) {
-    try {
-      const todo = await Todo.findByPk(request.params.id);
-      return response.json(todo);
-    } catch (error) {
-      console.log(error);
-      return response.status(422).json(error);
-    }
-  },
-);
-
+// app.get(
+//   "/todos/:id",
+//   connectEnsureLogin.ensureLoggedIn(),
+//   async function (request, response) {
+//     try {
+//       const todo = await Todo.findByPk(request.params.id);
+//       return response.json(todo);
+//     } catch (error) {
+//       console.log(error);
+//       return response.status(422).json(error);
+//     }
+//   },
+// );
+*/
 app.post(
   "/todos",
   connectEnsureLogin.ensureLoggedIn(),
@@ -201,30 +203,45 @@ app.put(
   },
 );
 
-app.get("/signup", (req, res) => {
-  res.render("signup", { title: "Signup", csrfToken: req.csrfToken() });
+app.get("/signup", async (req, res) => {
+  console.log(req.flash("error"));
+  res.render("signup", {
+    title: "Signup",
+    csrfToken: req.csrfToken(),
+    flashMessages: await req.flash("error"),
+  });
 });
 
 app.post("/users", async (req, res) => {
-  //hash the password
-  const hashpass = await bcrypt.hash(req.body.password, saltRounds);
-  console.log(hashpass);
-  //creating user
-  try {
-    const user = await User.create({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: hashpass,
-    });
-    req.login(user, (err) => {
-      if (err) {
-        console.log(err);
-      }
-      res.redirect("/todos");
-    });
-  } catch (err) {
-    console.error(err);
+  const res1 = req.body.firstName.trim() === "";
+  if (res1) {
+    console.log("firstname : ", req.body.firstName);
+    req.flash("error", "First name cannot be empty");
+    console.log("Flash messages set:", req.flash("error"));
+    res.redirect("/signup");
+  } else {
+    //hash the password
+    const hashpass = await bcrypt.hash(req.body.password, saltRounds);
+    console.log(hashpass);
+    //creating user
+    try {
+      const user = await User.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: hashpass,
+      });
+      req.login(user, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        res.redirect("/todos");
+      });
+    } catch (err) {
+      console.log(err);
+      req.flash("error", "An error occurred during user creation");
+      res.redirect("/signup");
+    }
   }
 });
 
